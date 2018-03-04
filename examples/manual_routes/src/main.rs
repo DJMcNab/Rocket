@@ -5,6 +5,7 @@ mod tests;
 
 use std::io;
 use std::fs::File;
+use std::env::temp_dir;
 
 use rocket::{Request, Route, Data, Catcher, Error};
 use rocket::http::{Status, RawStr};
@@ -41,7 +42,8 @@ fn upload<'r>(req: &'r Request, data: Data) -> Outcome<'r> {
         return Outcome::failure(Status::BadRequest);
     }
 
-    let file = File::create("/tmp/upload.txt");
+    let tempfile = temp_dir().join("rocket_upload_manual.txt");
+    let file = File::create(tempfile);
     if let Ok(mut file) = file {
         if let Ok(n) = io::copy(&mut data.open(), &mut file) {
             return Outcome::from(req, format!("OK: {} bytes uploaded.", n));
@@ -56,7 +58,8 @@ fn upload<'r>(req: &'r Request, data: Data) -> Outcome<'r> {
 }
 
 fn get_upload(req: &Request, _: Data) -> Outcome<'static> {
-    Outcome::from(req, File::open("/tmp/upload.txt").ok())
+    let tempfile = std::env::temp_dir().join("rocket_upload_manual.txt");
+    Outcome::from(req, File::open(tempfile).ok())
 }
 
 fn not_found_handler<'r>(_: Error, req: &'r Request) -> response::Result<'r> {
