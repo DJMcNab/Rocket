@@ -83,4 +83,4 @@ echo ":: Bootstrapping examples..."
 bootstrap_examples
 
 echo ":: Building and testing libraries..."
-CARGO_INCREMENTAL=0 cargo test --all-features --all $@
+CARGO_INCREMENTAL=${CARGO_INCREMENTAL:-0} cargo test --all-features --all $@
