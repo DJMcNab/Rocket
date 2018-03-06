@@ -1,4 +1,4 @@
-#![feature(test, plugin)]
+#![feature(test, plugin, decl_macro)]
 #![plugin(rocket_codegen)]
 // #![feature(alloc_system)]
 // extern crate alloc_system;
@@ -29,8 +29,8 @@ fn index_b() -> &'static str { "index" }
 #[get("/c")]
 fn index_c() -> &'static str { "index" }
 
-#[get("/<a>")]
-fn index_dyn_a(a: &RawStr) -> &'static str { "index" }
+#[get("/<_a>")]
+fn index_dyn_a(_a: &RawStr) -> &'static str { "index" }
 
 fn hello_world_rocket() -> rocket::Rocket {
     let config = Config::new(Environment::Production).unwrap();
@@ -50,7 +50,6 @@ mod benches {
     use super::{hello_world_rocket, rocket};
     use self::test::Bencher;
     use rocket::local::Client;
-    use rocket::http::Method::*;
 
     #[bench]
     fn bench_hello_world(b: &mut Bencher) {
