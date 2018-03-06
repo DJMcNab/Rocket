@@ -3,12 +3,13 @@
 
 extern crate rocket;
 
-use std::path::PathBuf;
+use std::path::{PathBuf, MAIN_SEPARATOR};
 use rocket::Route;
 
 #[get("/<path..>")]
 fn files(route: &Route, path: PathBuf) -> String {
     format!("{}/{}", route.base(), path.to_string_lossy())
+        .replace(MAIN_SEPARATOR, "/")
 }
 
 mod route_guard_tests {
